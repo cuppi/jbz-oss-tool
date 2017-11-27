@@ -12,7 +12,6 @@ const region = require('./config').region;
 const accessKeyId = require('./config').accessKeyId;
 const accessKeySecret = require('./config').accessKeySecret;
 const ossDirectory = require('./config').ossDirectory;
-const betaBuildPath = require('./config').betaBuildPath;
 
 let ossManager = null;
 
@@ -38,7 +37,7 @@ class OssManager{
     savePath = ossDirectory + savePath;
     return new Promise((resolve, reject) => {
       this.client.put(savePath, filePath).then(val => {
-        console.log(val);
+        // console.log(val);
         resolve({fileName, filePath, savePath: val.name, accessUrl: val.url});
       }, error => {
         reject(error);
@@ -55,11 +54,11 @@ class OssManager{
     }
   }
 
-  doUploadByTree(fileTree){
+  doUploadByTree(basePath, fileTree){
     return new Promise((resolve, reject) => {
       let promiseMetaList = [];
       this.mapFileTree(fileTree, (file) => {
-        let savePath = path.relative(betaBuildPath, file.path);
+        let savePath = path.relative(basePath, file.path);
         if (!file.childs){
           promiseMetaList.push({savePath, filePath: file.path, fileName: file.name})
         }

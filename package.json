@@ -1,11 +1,29 @@
 {
   "name": "jbz-oss-tool",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "chalk": "^2.3.0",
+    "gulp-replace": "^0.6.1",
+    "ali-oss": "^4.10.1",
+    "co": "^4.6.0"
+  },
+  "author": {
+    "email": "cuppi413@163.com",
+    "name": "cuppi",
+    "url": "https://github.com/cuppi"
+  },
+  "license": "MIT",
+  "repository": {
+    "url": "git@github.com:cuppi/jbz-oss-tool.git",
+    "type": "git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
 }
