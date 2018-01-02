@@ -127,11 +127,11 @@ function fileTreeFromDirectory (directoryPath) {
         return;
     }
     menu.forEach((ele) => {
-        let info = fs.statSync(directoryPath + '/' + ele)
+        let info = fs.statSync(path.resolve(directoryPath, ele))
         if(info.isDirectory()){
-            fileTree.childs.push(fileTreeFromDirectory(directoryPath + '/' + ele));
+            fileTree.childs.push(fileTreeFromDirectory(path.resolve(directoryPath, ele)));
         } else {
-            fileTree.childs.push({name: ele, path: directoryPath + '/' + ele, childs: null});
+            fileTree.childs.push({name: ele, path: path.resolve(directoryPath, ele), childs: null});
         }
     })
     return fileTree;
