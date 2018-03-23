@@ -3,6 +3,13 @@
  */
 
 const path = require('path');
-let config = path.resolve(__dirname, '../../', '.jbz.oss.config.js');
-module.exports = require(config);
+const user_config = require(path.resolve(__dirname, '../../', '.jbz.oss.config.js'));
+const default_config = {
+    replaceInterceptor: (path, from, to) => {
+        return to;
+    }
+}
+
+const config = Object.assign({}, default_config, user_config);
+module.exports = config;
 

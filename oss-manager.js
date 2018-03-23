@@ -62,7 +62,7 @@ class OssManager{
         return new Promise((resolve, reject) => {
             let promiseMetaList = [];
             this.mapFileTree(fileTree, (file) => {
-                let savePath = path.relative(basePath, file.path);
+                let savePath = path.relative(basePath, file.path).replace(/\\/g, '/');
                 if (!file.childs){
                     promiseMetaList.push({savePath, filePath: file.path, fileName: file.name})
                 }

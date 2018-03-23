@@ -11,20 +11,20 @@ const chalk = require('chalk')
 const fs = require('fs');
 const replace = require('gulp-replace');
 
-let configPath = path.resolve(__dirname, '../../', '.jbz.oss.config.js');
-if (!fs.existsSync(configPath)){
+let user_config_path = path.resolve(__dirname, '../../', '.jbz.oss.config.js');
+if (!fs.existsSync(user_config_path)){
     console.log('没有找到配置文件, 请确认是否创建配置文件');
     return;
 }
 
+const config = require('./config');
 const OssManager = require('./oss-manager');
-const projectPath = require('./config').projectPath;
-const buildToolPath = require('./config').buildToolPath;
+const projectPath = config.projectPath;
+const buildToolPath = config.buildToolPath;
 
 const env = process.argv[2];
-const buildPath = env === 'pro' ? require('./config').proBuildPath : require('./config').betaBuildPath;
-const indexPath = env === 'pro' ? require('./config').proIndexPath : require('./config').betaIndexPath;
-
+const buildPath = env === 'pro' ? config.proBuildPath : config.betaBuildPath;
+const indexPath = env === 'pro' ? config.proIndexPath : config.betaIndexPath;
 
 /**
  * 执行命令
@@ -71,7 +71,7 @@ function _doCommand(command, args, options) {
  */
 function cpBuild (type) {
     return new Promise((resolve, reject) => {
-        console.log('node ' + buildToolPath + ' ' + type);
+        console.log('node' + ' ' + buildToolPath + ' ' + type);
         _doCommand('node', [buildToolPath, type], {cwd: projectPath}).then(() => {
             resolve();
         }, () => {
@@ -87,11 +87,14 @@ function smartUploadOss () {
     console.log(chalk.green('开始阿里云上传...'));
     return new Promise((resolve, reject) => {
         let fileTree = fileTreeFromDirectory(path.resolve(__dirname, buildPath));
+        if (!fileTree){
+            reject(new Error('没有找到打包文件路径: ' + path.resolve(__dirname, buildPath)))
+        }
         OssManager.defaultManager().doUploadByTree(buildPath, fileTree).then(fileList => {
             console.log(chalk.green('阿里云上传成功'));
             let rs = [];
             fileList.map(val => {
-                rs.push({from: path.relative(buildPath, val.filePath), to: val.accessUrl})
+                rs.push({from: path.relative(buildPath, val.filePath).replace(/\\/g, '/'), to: val.accessUrl})
             })
             replacePathInIndex(rs);
             resolve();
@@ -107,9 +110,12 @@ function smartUploadOss () {
  */
 function replacePathInIndex(replaceList) {
     console.log(chalk.green('开始index.html同步...'));
+    if (!fs.existsSync(indexPath)){
+        console.log(chalk.yellow(`路径: ${indexPath} index.html不存在`));
+    }
     let filmPipe = gulp.src([indexPath]);
     replaceList.forEach(rs => {
-        filmPipe = filmPipe.pipe(replace(new RegExp('(.\/)*' + rs.from, 'g'), rs.to))
+        filmPipe = filmPipe.pipe(replace(new RegExp('(.\/)*' + rs.from, 'g'), config.replaceInterceptor(indexPath, rs.from, rs.to)))
     });
     filmPipe.pipe(gulp.dest(buildPath));
     console.log(chalk.green('index.html同步完成'));
@@ -122,10 +128,10 @@ function replacePathInIndex(replaceList) {
  */
 function fileTreeFromDirectory (directoryPath) {
     let fileTree = {name: path.basename(directoryPath), path: directoryPath, childs: []};
-    let menu = fs.readdirSync(directoryPath)
-    if(!menu){
-        return;
+    if (!fs.existsSync(directoryPath)){
+        return null;
     }
+    let menu = fs.readdirSync(directoryPath)
     menu.forEach((ele) => {
         let info = fs.statSync(path.resolve(directoryPath, ele))
         if(info.isDirectory()){
@@ -140,6 +146,8 @@ function fileTreeFromDirectory (directoryPath) {
 cpBuild(env).then(() => {
     smartUploadOss().then(() => {
         console.log(chalk.green('oss依赖打包完成'));
+    }, error => {
+        console.log(error);
     });
 }, error => {
     console.log(chalk.red(`oss依赖打包失败: ${error}`));
