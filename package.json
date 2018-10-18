@@ -18,11 +18,11 @@
   "author": {
     "email": "cuppi413@163.com",
     "name": "cuppi",
-    "url": "https://github.com/cuppi"
+    "url": "git@github.com:jinbaozheng"
   },
   "license": "MIT",
   "repository": {
-    "url": "git@github.com:cuppi/jbz-oss-tool.git",
+    "url": "git@github.com:jinbaozheng/jbz-oss-tool.git",
     "type": "git"
   },
   "publishConfig": {
