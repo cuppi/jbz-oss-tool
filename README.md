@@ -27,7 +27,6 @@ npm install jbz-oss-tool --save-dev
 下所示：
 ```json
 {
-  ...,
   "scripts": {
     "smart-build-beta": "jbz-oss-build beta",
     "smart-build-pro": "jbz-oss-build pro"
