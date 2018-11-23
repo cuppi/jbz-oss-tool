@@ -14,14 +14,14 @@ const chalk = require('chalk')
 const fs = require('fs');
 const replace = require('gulp-replace');
 
-let user_config_path = path.resolve(__dirname, '../../', '.jbz.oss.config.js');
+let user_config_path = path.resolve(__dirname, '../../../', '.jbz.oss.config.js');
 if (!fs.existsSync(user_config_path)){
   console.log('没有找到配置文件, 请确认是否创建配置文件');
   return;
 }
 
-const config = require('./config');
-const OssManager = require('./oss-manager');
+const config = require('../config');
+const OssManager = require('../oss-manager');
 const projectPath = config.projectPath;
 const buildToolPath = config.buildToolPath;
 const buildToolScript = config.buildToolScript;
@@ -78,7 +78,7 @@ function cpBuild (type) {
   return new Promise((resolve, reject) => {
     if (vueCliVersion === 3){
       console.log(chalk.green('将使用vue-cli3方式进行打包'));
-      _doCommand(path.resolve(__dirname, '../.bin/vue-cli-service'), ['build'], {
+      _doCommand(path.resolve(__dirname, '../../.bin/vue-cli-service'), ['build'], {
         cmd: {cwd: projectPath},
         env: {
           ...process.env,
