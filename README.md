@@ -33,7 +33,7 @@ npm install jbz-oss-tool --save-dev
   }
 }
 ```
-> 提示: beta参数及pro参数分别代表测试打包环境及生产打包环境。
+> 提示: beta参数及pro参数分别代表测试打包环境及生产打包环境，也是打包脚本需要处理的参数。
 
 ### .jbz.oss.config.js
 | 参数 | 说明 | 默认配置 |
