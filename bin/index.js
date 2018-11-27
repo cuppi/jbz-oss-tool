@@ -4,13 +4,13 @@
  */
 /* eslint-disable */
 
-
 const gulp = require('gulp');
-const path = require('path')
+const path = require('path');
 const spawn = require('child_process').spawn;
 const cowsay = require('cowsay');
+const os = require('os');
 
-const chalk = require('chalk')
+const chalk = require('chalk');
 const fs = require('fs');
 const replace = require('gulp-replace');
 
@@ -78,7 +78,9 @@ function cpBuild (type) {
   return new Promise((resolve, reject) => {
     if (vueCliVersion === 3){
       console.log(chalk.green('将使用vue-cli3方式进行打包'));
-      _doCommand(path.resolve(__dirname, '../../.bin/vue-cli-service'), ['build'], {
+      let vueCliService = os.platform() === 'win32' ? path.resolve(__dirname, '../../.bin/vue-cli-service.cmd') :
+          path.resolve(__dirname, '../../.bin/vue-cli-service')
+      _doCommand(path.resolve(__dirname, vueCliService, ['build'], {
         cmd: {cwd: projectPath},
         env: {
           ...process.env,

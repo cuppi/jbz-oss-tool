@@ -78,6 +78,8 @@ function cpBuild (type) {
   return new Promise((resolve, reject) => {
     if (vueCliVersion === 3){
       console.log(chalk.green('将使用vue-cli3方式进行打包'));
+        let vueCliService = os.platform() === 'win32' ? path.resolve(__dirname, '../.bin/vue-cli-service.cmd') :
+            path.resolve(__dirname, '../.bin/vue-cli-service')
       _doCommand(path.resolve(__dirname, '../.bin/vue-cli-service'), ['build'], {
         cmd: {cwd: projectPath},
         env: {
