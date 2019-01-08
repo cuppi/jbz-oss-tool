@@ -1,9 +1,5 @@
-[PostCSS]: https://github.com/postcss/postcss
-[ci-img]:  https://travis-ci.org/cuppi/postcss-ketchup.svg
-[ci]:      https://travis-ci.org/cuppi/postcss-ketchup
-[CSS]:     https://developer.mozilla.org/zh-CN/docs/Web/CSS
-[Icon]:    http://i-film-beta.oss-cn-shanghai.aliyuncs.com/framework/postcss-ketchup/ketch-icon.png
-[postcss-loader]: https://github.com/postcss/postcss-loader
+[ci-img]:  https://travis-ci.org/cuppi/jbz-oss-tool.svg
+[ci]:      https://travis-ci.org/cuppi/jbz-oss-tool
 # JBZ-OSS-TOOL [![Build Status][ci-img]][ci]
 jbz-oss-tool 是一个基于vue-cli2 或 3 的工具, 由金保证公司内部使用, 
 其主要任务为打包vue项目并将打包好的资源文件按照目录结构上传到阿里云并将项目内部引用路径同步修改。
