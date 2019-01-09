@@ -195,20 +195,25 @@ function fileTreeFromDirectory (directoryPath) {
 if (!env){
     console.log(chalk.red('\n未设置环境, 将采用默认打包方式\n'));
 }
-cpBuild(env || '').then(() => {
-    smartUploadOss().then(() => {
-        console.log(cowsay.say({
-            text: chalk.green('oss依赖打包完成')
-        }));
+
+try {
+    cpBuild(env || '').then(() => {
+        smartUploadOss().then(() => {
+            console.log(cowsay.say({
+                text: chalk.green('oss依赖打包完成')
+            }));
+        }, error => {
+            throw error;
+        });
     }, error => {
-        console.log(error);
-        process.exit(-1);
+        throw new Error(`oss依赖打包失败 ${error || ''}`)
     });
-}, error => {
+} catch (e) {
     console.log(cowsay.say({
-        text: chalk.red(`oss依赖打包失败 ${error || ''}`)
+        text: chalk.red(e.message)
     }));
     process.exit(-1);
-});
+}
+
 
 /* eslint-enable */
