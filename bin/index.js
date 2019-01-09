@@ -202,11 +202,13 @@ cpBuild(env || '').then(() => {
         }));
     }, error => {
         console.log(error);
+        process.exit(-1);
     });
 }, error => {
     console.log(cowsay.say({
         text: chalk.red(`oss依赖打包失败 ${error || ''}`)
     }));
+    process.exit(-1);
 });
 
 /* eslint-enable */
