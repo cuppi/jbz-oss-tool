@@ -82,7 +82,7 @@ function _doCommand(command, args, options, mark) {
  * @param type 打包生产环境
  * @returns {Promise}
  */
-function cpBuild (type) {
+async function cpBuild (type) {
     return new Promise((resolve, reject) => {
         if (vueCliVersion === 3){
             console.log(chalk.green('将使用vue-cli3方式进行打包'));
@@ -132,7 +132,7 @@ function cpBuild (type) {
 /**
  * 上传OSS文件
  */
-function smartUploadOss () {
+async function smartUploadOss () {
     console.log(chalk.green('开始阿里云上传...'));
     return new Promise((resolve, reject) => {
         let fileTree = fileTreeFromDirectory(path.resolve(__dirname, buildPath));
@@ -192,28 +192,28 @@ function fileTreeFromDirectory (directoryPath) {
     return fileTree;
 }
 
-if (!env){
-    console.log(chalk.red('\n未设置环境, 将采用默认打包方式\n'));
-}
 
-try {
-    cpBuild(env || '').then(() => {
-        smartUploadOss().then(() => {
+(async function run_command() {
+    try {
+        if (!env){
+            throw new Error('\n未设置环境, 将采用默认打包方式\n');
+        }
+        try {
+            await cpBuild(env || '');
+            await smartUploadOss();
             console.log(cowsay.say({
                 text: chalk.green('oss依赖打包完成')
             }));
-        }, error => {
-            throw error;
-        });
-    }, error => {
-        throw new Error(`oss依赖打包失败 ${error || ''}`)
-    });
-} catch (e) {
-    console.log(cowsay.say({
-        text: chalk.red(e.message)
-    }));
-    process.exit(-1);
-}
+        } catch (e) {
+            throw new Error(`oss依赖打包失败 ${error || ''}`)
+        }
+    } catch (e) {
+        console.log(cowsay.say({
+            text: chalk.red(e.message)
+        }));
+        process.exit(-1);
+    }
+})();
 
 
 /* eslint-enable */
