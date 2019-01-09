@@ -211,7 +211,7 @@ function fileTreeFromDirectory (directoryPath) {
         console.log(cowsay.say({
             text: chalk.red(e.message)
         }));
-        process.exit(-1);
+        process.exit(1);
     }
 })();
 
