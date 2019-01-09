@@ -205,7 +205,7 @@ function fileTreeFromDirectory (directoryPath) {
                 text: chalk.green('oss依赖打包完成')
             }));
         } catch (e) {
-            throw new Error(`oss依赖打包失败 ${error || ''}`)
+            throw new Error(`oss依赖打包失败 ${e || ''}`)
         }
     } catch (e) {
         console.log(cowsay.say({
