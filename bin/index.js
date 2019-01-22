@@ -164,7 +164,14 @@ function replacePathInIndex(replaceList) {
     }
     let filmPipe = gulp.src([indexPath]);
     replaceList.forEach(rs => {
-        filmPipe = filmPipe.pipe(replace(new RegExp('(.\/)*' + rs.from, 'g'), config.replaceInterceptor(indexPath, rs.from, rs.to)))
+        filmPipe = filmPipe.pipe(replace(new RegExp('(.\/)*' + rs.from, 'g'), function(match, p1, offset, string) {
+            return config.replaceInterceptor(indexPath, rs.from, rs.to, {
+                match,
+                p1,
+                offset,
+                string
+            });
+        }))
     });
     filmPipe.pipe(gulp.dest(buildPath));
     console.log(chalk.green('index.html同步完成'));
