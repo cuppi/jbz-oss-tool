@@ -1,18 +1,18 @@
 {
   "name": "jbz-oss-tool",
-  "version": "1.0.13-beta7",
+  "version": "1.0.14-beta0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "gulp": "^3.9.1",
-    "chalk": "^2.3.0",
-    "gulp-replace": "^0.6.1",
+    "gulp": "^4.0.0",
+    "chalk": "^2.4.2",
+    "gulp-replace": "^1.0.0",
     "ali-oss": "^4.10.1",
     "co": "^4.6.0",
-    "cowsay": "^1.3.1"
+    "cowsay": "^1.4.0"
   },
   "devDependencies": {
   },
