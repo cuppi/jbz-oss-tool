@@ -38,10 +38,10 @@ function log(message, mode='verbose') {
         return;
     }
     if (mode === 'verbose'){
-        console.log(`verbose: ${message}`);
+        console.log(chalk.cyan(`verbose: ${message}`));
     }
     if (mode === 'error'){
-        console.error(`error: ${message}`);
+        console.log(chalk.bgRed(`error: ${message}`));
     }
 }
 
