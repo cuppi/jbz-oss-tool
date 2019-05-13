@@ -27,9 +27,23 @@ const buildToolPath = config.buildToolPath;
 const buildToolScript = config.buildToolScript;
 const vueCliVersion = config.vueCliVersion;
 
-const env = process.argv[2];
+const args = process.argv.splice(2) || [];
+const log_debug = args.indexOf('--log_debug') !== -1;
+const env = args[0] || '';
 const buildPath = env === 'pro' ? config.proBuildPath : config.betaBuildPath;
 const indexPath = env === 'pro' ? config.proIndexPath : config.betaIndexPath;
+
+function log(message, mode='verbose') {
+    if (!log_debug){
+        return;
+    }
+    if (mode === 'verbose'){
+        console.log(`verbose: ${message}`);
+    }
+    if (mode === 'error'){
+        console.error(`error: ${message}`);
+    }
+}
 
 /**
  * 执行命令
@@ -57,10 +71,12 @@ function _doCommand(command, args, options, mark) {
         console.log('\n');
         let success = true;
         h.stdout.on('data', function (s) {
+            log(s.toString())
             process.stdout.write(`${s.toString()}`);
         });
 
         h.stderr.on('data', (err) => {
+            log(err.toString(), 'error')
             if (!ignore_error){
                 success = stderr_is_ok(err.toString());
             }
