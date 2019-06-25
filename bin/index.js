@@ -109,7 +109,8 @@ async function cpBuild (type) {
                 env: {
                     ...process.env,
                     ...{
-                        VUE_BUILD_MODE: type
+                        VUE_BUILD_MODE: type,
+                        JBZ_OSS_CONFIG: config
                     }
                 }
             }, {
