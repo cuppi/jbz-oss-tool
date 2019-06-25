@@ -110,7 +110,7 @@ async function cpBuild (type) {
                     ...process.env,
                     ...{
                         VUE_BUILD_MODE: type,
-                        JBZ_OSS_CONFIG: config
+                        JBZ_OSS_CONFIG: JSON.stringify(config)
                     }
                 }
             }, {
