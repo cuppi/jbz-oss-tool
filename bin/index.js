@@ -224,7 +224,7 @@ function fileTreeFromDirectory (directoryPath) {
             throw new Error('\n未设置环境, 请默认打包方式\n');
         }
         try {
-            // await cpBuild(env || '');
+            await cpBuild(env || '');
             await smartUploadOss();
             console.log(cowsay.say({
                 text: chalk.green('oss依赖打包完成')
