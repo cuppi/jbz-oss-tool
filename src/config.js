@@ -3,7 +3,8 @@
  */
 
 const path = require('path');
-const user_config = require(path.resolve(__dirname, '../../', '.jbz.oss.config.js'));
+const {safe_get_file_from_root} = require('./tool');
+const user_config = require(safe_get_file_from_root('.jbz.oss.config.js'));
 const default_config = {
   vueCliVersion: 2,
   replaceInterceptor: (path, from, to) => {

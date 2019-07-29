@@ -5,7 +5,7 @@
 const OSS = require('ali-oss').Wrapper;
 const path = require('path');
 const fs = require('fs');
-const chalk = require('chalk')
+const chalk = require('chalk');
 
 const buckets = require('./config').buckets;
 const region = require('./config').region;
@@ -67,7 +67,6 @@ class OssManager{
                     promiseMetaList.push({savePath, filePath: file.path, fileName: file.name})
                 }
             })
-
             let ossFileList = [];
             let recycleUpload = (progressIndex) => {
                 if (progressIndex >= promiseMetaList.length){

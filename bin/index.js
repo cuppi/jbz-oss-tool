@@ -9,19 +9,20 @@ const path = require('path');
 const spawn = require('child_process').spawn;
 const cowsay = require('cowsay');
 const os = require('os');
+const {safe_get_file_from_root, safe_get_file_from_node_modules} = require('../src/tool');
 
 const chalk = require('chalk');
 const fs = require('fs');
 const replace = require('gulp-replace');
 
-let user_config_path = path.resolve(__dirname, '../../../', '.jbz.oss.config.js');
-if (!fs.existsSync(user_config_path)){
+let user_config_path = safe_get_file_from_root('.jbz.oss.config.js');
+if (!user_config_path){
     console.log('没有找到配置文件, 请确认是否创建配置文件');
     return;
 }
 
-const config = require('../config');
-const OssManager = require('../oss-manager');
+const config = require('../src/config');
+const OssManager = require('../src/oss-manager');
 const projectPath = config.projectPath;
 const buildToolPath = config.buildToolPath;
 const buildToolScript = config.buildToolScript;
@@ -102,8 +103,8 @@ async function cpBuild (type) {
     return new Promise((resolve, reject) => {
         if (vueCliVersion === 3){
             console.log(chalk.green('将使用vue-cli3方式进行打包'));
-            let vueCliService = os.platform() === 'win32' ? path.resolve(__dirname, '../../.bin/vue-cli-service.cmd') :
-                path.resolve(__dirname, '../../.bin/vue-cli-service')
+            let vueCliService = os.platform() === 'win32' ? safe_get_file_from_node_modules('./.bin/vue-cli-service.cmd') :
+                safe_get_file_from_node_modules('./.bin/vue-cli-service')
             _doCommand(vueCliService, ['build'], {
                 cmd: {cwd: projectPath},
                 env: {
@@ -220,10 +221,10 @@ function fileTreeFromDirectory (directoryPath) {
 (async function run_command() {
     try {
         if (!env){
-            throw new Error('\n未设置环境, 将采用默认打包方式\n');
+            throw new Error('\n未设置环境, 请默认打包方式\n');
         }
         try {
-            await cpBuild(env || '');
+            // await cpBuild(env || '');
             await smartUploadOss();
             console.log(cowsay.say({
                 text: chalk.green('oss依赖打包完成')
