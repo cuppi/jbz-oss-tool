@@ -176,6 +176,10 @@ async function smartUploadOss () {
  * @param replaceList
  */
 function replacePathInIndex(replaceList) {
+    if(config.noReplacePathInIndex){
+        console.log(chalk.yellow('当前配置不进行自动替换 index.html 相关资源路径, 请确保打包工具根路径正确配置...'));
+        return;
+    }
     console.log(chalk.green('开始index.html同步...'));
     if (!fs.existsSync(indexPath)){
         console.log(chalk.yellow(`路径: ${indexPath} index.html不存在`));

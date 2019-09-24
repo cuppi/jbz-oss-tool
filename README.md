@@ -39,6 +39,7 @@ npm install jbz-oss-tool --save-dev
 |projectPath    | 本地环境最外层目录   | path.resolve(__dirname, './')|
 |buildToolPath  | 打包js脚本路径      |-|
 |buildToolScript| 打包js命令          |-|
+|noReplacePathInIndex| 不进行入口html的路径修改          |false|
 |vueCliVersion  | 使用的vue版本       | 2|
 |betaBuildPath  | 测试环境打包目标路径 | path.resolve(__dirname, './dist_beta')|
 |betaIndexPath  | 测试环境入口html路径 | path.resolve(betaBuildPath, './index.html')|
