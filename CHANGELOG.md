@@ -17,3 +17,6 @@
 
 ## 1.0.15
     * 增加 noReplacePathInIndex 配置项配置是否进行 index.html 的替换
+    
+## 1.0.17
+    * 修改package.json 的 bin 指向为相对路径
