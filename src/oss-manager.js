@@ -1,6 +1,3 @@
-/**
- * Created by cuppi on 2017/10/18.
- */
 /* eslint-disable */
 const OSS = require('ali-oss').Wrapper;
 const path = require('path');
@@ -37,9 +34,8 @@ class OssManager{
         savePath = ossDirectory + savePath;
         return new Promise((resolve, reject) => {
             this.client.put(savePath, filePath).then(val => {
-                // console.log(val);
                 let protocol = val.url.substr(0, 5);
-                if (protocol.indexOf('https') === -1 && protocol.indexOf('http') !== -1){
+                if (/https+/.test(protocol) === -1){
                     val.url.replace('http', 'https');
                 }
                 resolve({fileName, filePath, savePath: val.name, accessUrl: val.url});

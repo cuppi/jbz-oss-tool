@@ -1,20 +1,16 @@
 #!/usr/bin/env node
-/**
- * Created by cuppi on 2017/10/16.
- */
 /* eslint-disable */
 
-const gulp = require('gulp');
+const {src, dest} = require('gulp');
 const path = require('path');
-const spawn = require('child_process').spawn;
+const {spawn} = require('child_process');
 const cowsay = require('cowsay');
 const os = require('os');
-const {safe_get_file_from_root, safe_get_file_from_node_modules} = require('../src/tool');
-
-const chalk = require('chalk');
 const fs = require('fs');
+const chalk = require('chalk');
 const replace = require('gulp-replace');
 
+const {safe_get_file_from_root, safe_get_file_from_node_modules, log} = require('../src/tool');
 let user_config_path = safe_get_file_from_root('.jbz.oss.config.js');
 if (!user_config_path){
     console.log('没有找到配置文件, 请确认是否创建配置文件');
@@ -29,70 +25,11 @@ const buildToolScript = config.buildToolScript;
 const vueCliVersion = config.vueCliVersion;
 
 const args = process.argv.splice(2) || [];
-const log_debug = args.indexOf('--log_debug') !== -1;
+global.log_debug = args.indexOf('--log_debug') !== -1;
 const env = args[0] || '';
 const buildPath = env === 'pro' ? config.proBuildPath : config.betaBuildPath;
 const indexPath = env === 'pro' ? config.proIndexPath : config.betaIndexPath;
 
-function log(message, mode='verbose') {
-    if (!log_debug){
-        return;
-    }
-    if (mode === 'verbose'){
-        console.log(chalk.cyan(`verbose: ${message}`));
-    }
-    if (mode === 'error'){
-        console.log(chalk.bgRed(`error: ${message}`));
-    }
-}
-
-/**
- * 执行命令
- * @param command 命令
- * @param args 参数
- * @param options 配置项
- * @param mark 配置项
- * @returns {Promise}
- * @private
- */
-function _doCommand(command, args, options, mark) {
-    let {ignore_error, stderr_is_ok} = {
-        ignore_error: false,
-        stderr_is_ok: (err) => false,
-        ...mark
-    }
-    return new Promise((resolve, reject) => {
-        let h = spawn(command, args, options, (error, stdout, stderr) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(stdout, stderr);
-            }
-        })
-        console.log('\n');
-        let success = true;
-        h.stdout.on('data', function (s) {
-            log(s.toString())
-            process.stdout.write(`${s.toString()}`);
-        });
-
-        h.stderr.on('data', (err) => {
-            log(err.toString(), 'error')
-            if (!ignore_error){
-                success = stderr_is_ok(err.toString());
-            }
-            process.stdout.write(`stderr: ${err}`);
-        });
-
-        h.stdout.on('end', function () {
-            if (success){
-                resolve();
-            } else {
-                reject();
-            }
-        });
-    })
-}
 
 /**
  * 进行自定义打包
@@ -163,40 +100,12 @@ async function smartUploadOss () {
             fileList.map(val => {
                 rs.push({from: path.relative(buildPath, val.filePath).replace(/\\/g, '/'), to: val.accessUrl})
             })
-            replacePathInIndex(rs);
+            console.log(chalk.yellow('当前配置不进行自动替换 index.html 相关资源路径, 请确保打包工具根路径正确配置...'));
             resolve();
         }, error => {
             reject(error);
         });
     })
-}
-
-/**
- * 替换index.html文件中的Url
- * @param replaceList
- */
-function replacePathInIndex(replaceList) {
-    if(config.noReplacePathInIndex){
-        console.log(chalk.yellow('当前配置不进行自动替换 index.html 相关资源路径, 请确保打包工具根路径正确配置...'));
-        return;
-    }
-    console.log(chalk.green('开始index.html同步...'));
-    if (!fs.existsSync(indexPath)){
-        console.log(chalk.yellow(`路径: ${indexPath} index.html不存在`));
-    }
-    let filmPipe = gulp.src([indexPath]);
-    replaceList.forEach(rs => {
-        filmPipe = filmPipe.pipe(replace(new RegExp('(.\/)*' + rs.from, 'g'), function(match, p1, offset, string) {
-            return config.replaceInterceptor(indexPath, rs.from, rs.to, {
-                match,
-                p1,
-                offset,
-                string
-            });
-        }))
-    });
-    filmPipe.pipe(gulp.dest(buildPath));
-    console.log(chalk.green('index.html同步完成'));
 }
 
 /**
@@ -222,27 +131,34 @@ function fileTreeFromDirectory (directoryPath) {
 }
 
 
-(async function run_command() {
-    try {
-        if (!env){
-            throw new Error('\n未设置环境, 请默认打包方式\n');
-        }
-        try {
-            await cpBuild(env || '');
-            await smartUploadOss();
-            console.log(cowsay.say({
-                text: chalk.green('oss依赖打包完成')
-            }));
-        } catch (e) {
-            throw new Error(`oss依赖打包失败 ${e || ''}`)
-        }
-    } catch (e) {
-        console.log(cowsay.say({
-            text: chalk.red(e.message)
-        }));
-        process.exit(1);
-    }
-})();
+// (async function run_command() {
+//     try {
+//         if (!env){
+//             throw new Error('\n未设置环境, 请默认打包方式\n');
+//         }
+//         try {
+//             await cpBuild(env || '');
+//             await smartUploadOss();
+//             console.log(cowsay.say({
+//                 text: chalk.green('oss依赖打包完成')
+//             }));
+//         } catch (e) {
+//             throw new Error(`oss依赖打包失败 ${e || ''}`)
+//         }
+//     } catch (e) {
+//         console.log(cowsay.say({
+//             text: chalk.red(e.message)
+//         }));
+//         process.exit(1);
+//     }
+// })();
 
+
+function streamTask() {
+    return src('*.js')
+        .pipe(dest('output'));
+}
+
+exports.default = streamTask;
 
 /* eslint-enable */

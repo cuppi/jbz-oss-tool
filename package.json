@@ -1,6 +1,6 @@
 {
   "name": "jbz-oss-tool",
-  "version": "1.0.17",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "bin" : {
@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "gulp": "^4.0.0",
+    "gulp": "^4.0.2",
     "chalk": "^2.4.2",
     "gulp-replace": "^1.0.0",
     "ali-oss": "^4.10.1",
